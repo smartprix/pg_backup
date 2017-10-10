@@ -1,0 +1,25 @@
+{
+	"name": "wal-e_backup_script",
+	"version": "0.2.0",
+	"description": "Script to run wal-e backups and monitor the results",
+	"main": "wal-e_backup.js",
+	"author": "Rohit Gohri <rohit.gohri@smartprix.com> (http://www.smartprix.com/)",
+	"dependencies": {
+		"@slack/client": "^3.13.0",
+		"command-line-args": "^4.0.7",
+		"command-line-commands": "^2.0.1",
+		"command-line-usage": "^4.0.1",
+		"config": "^1.26.2",
+		"moment": "^2.18.1",
+		"tracer": "^0.8.11",
+		"userid": "^0.3.1"
+	},
+	"devDependencies": {
+		"eslint": "^4.8.0",
+		"eslint-config-smartprix": "^3.2.7"
+	},
+	"eslintConfig": {
+		"extends": "smartprix",
+		"rules": {}
+	}
+}
