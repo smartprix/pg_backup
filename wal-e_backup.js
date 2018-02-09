@@ -13,6 +13,7 @@ const options = {
 		GOOGLE_APPLICATION_CREDENTIALS: wale.gsAppCreds,
 	},
 	uid: postgresUID,
+	cwd: '/smartprix',
 };
 
 function getGsPrefix(branch, host) {
