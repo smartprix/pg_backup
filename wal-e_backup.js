@@ -95,7 +95,7 @@ async function doBackup() {
 		);
 		logger.trace('Wal-e backup push process finished. Backup successful');
 		return {
-			msg: `${branch} Backup: Succesfully done on ${moment().toString()} for host ${wale.host}.`,
+			msg: `${branch} Backup: ${basebackup}, completed on ${moment().toString()} for host ${wale.host}.`,
 			data: baseBackup,
 		};
 	}
@@ -104,7 +104,7 @@ async function doBackup() {
 	}
 }
 
-async function waleDelete(branch, olderThan) {
+async function waleDelete(branch, olderThan, total) {
 	logger.trace('Wal-e delete process starting up');
 	try {
 		let subComm = `retain ${olderThan}`;
@@ -114,7 +114,7 @@ async function waleDelete(branch, olderThan) {
 		const io = await exec(`${wale.path} --gs-prefix ${getGsPrefix(branch, wale.host)} delete --confirm ${subComm}`, options);
 		logger.debug(io.stdout);
 		logger.info(io.stderr);
-		return {msg: `${branch} Deletion: Retained the latest ${olderThan} backups for host ${wale.host}`};
+		return {msg: `${branch} Deletion: Deleted the oldest ${total - olderThan} backups, retained ${olderThan} for host ${wale.host}`};
 	}
 	catch (err) {
 		throw new Error(`${branch} Deletion: Wal-e failed to delete backups for host ${wale.host}\n` + err);
@@ -128,9 +128,9 @@ async function deleteBackups(branch, olderThan) {
 		// TODO: check date before deletion
 		if (backups.data.length <= olderThan) {
 			logger.trace('Wal-e delete skipped');
-			return {msg: `${branch} Deletion: Number of backups are not more than ${olderThan} for host ${wale.host}`};
+			return {msg: `${branch} Deletion: Number of backups (${backups.data.length}) are not more than ${olderThan} for host ${wale.host}`};
 		}
-		return await waleDelete(branch, olderThan);
+		return await waleDelete(branch, olderThan, backups.data.length);
 	}
 	catch (err) {
 		throw new Error(`${branch} Deletion:` + err);
