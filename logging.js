@@ -10,7 +10,7 @@ const fileLogger = require('tracer').dailyfile({
 	root: config.logDir,
 	format,
 	maxLogFiles: 10,
-	allLogsFileName: 'all',
+	allLogsFileName: 'postgres_backup',
 });
 const consoleLogger = require('tracer').colorConsole({format});
 

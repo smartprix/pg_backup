@@ -59,7 +59,7 @@ function customSpawn(command, args, opts, errFn = () => {}) {
 		cSpawn.stderr.on('data', (data) => {
 			const info = data.toString();
 			logger.info(info);
-			err += info;
+			err = info;
 			errFn(info);
 		});
 		cSpawn.on('close', (code) => {
