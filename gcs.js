@@ -145,7 +145,7 @@ async function copyBackup(day = 6, srcBranch = 'daily', destBranch = 'weekly') {
 		logger.trace('Got backup for day', day, ':', baseBackup);
 		const copiedFiles = await copyAllFiles(baseBackup, srcBranch, destBranch);
 		return {
-			msg: `Weekly Backup: Copied daily backup ${baseBackup.base} and ` +
+			msg: `Backup: Copied ${srcBranch} backup ${baseBackup.base} and ` +
 			`corresponding wal files to ${destBranch}, no. of files : ${copiedFiles.length}`,
 			data: copiedFiles,
 		};

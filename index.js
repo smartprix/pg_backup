@@ -193,26 +193,71 @@ async function doCommand(com) {
 				break;
 
 			case 'cron':
-				try {
-					const backups = [await backup.doBackup('daily')];
-					const dels = [await backup.deleteBackups('daily', cron.daily)];
-					if (moment().day() === cron.weekday) {
-						logger.log('Weekly stuff running too');
-						backups.push(await gcs.copyBackup(cron.weekday - 1));
-						dels.push(await backup.deleteBackups('weekly', cron.weekly));
-					}
-					res = await Promise.all([...backups, ...dels]);
-					sendSlack(res
-						.map(val => val.msg.charAt(0).toUpperCase() + val.msg.slice(1))
-						.join('\n\n'), `CRON JOB REPORT for ${waleHost}`);
-					logger.console('CRON job done');
+				let errs = [];
+				res = [];
+				try { 
+					const dailyBackup = await backup.doBackup('daily');
+					res.push({
+						title:'Daily Backup',
+						value: dailyBackup.msg,
+					});
 				}
-				catch (e) {
-					sendSlack(e.message, `CRON JOB REPORT for ${waleHost}`, '', e);
-					logger.error('CRON job failed\n', e);
+				catch(e) { 
+					errs.push({
+						title: 'Daily Backup',
+						value: e,
+					});
 				}
-				break;
 
+				try {
+					const dailyDelete = await backup.deleteBackups('daily', cron.daily);
+					res.push({
+						title:'Daily Delete',
+						value: dailyDelete.msg,
+					});
+				}
+				catch(e) { 
+					errs.push({
+						title: 'Daily Delete',
+						value: e,
+					});
+				}
+
+				if (moment().day() === cron.weekday) {
+					logger.log('Weekly stuff running too');
+					try { 
+						const weeklyBackup = await gcs.copyBackup(cron.weekday - 1);
+						res.push({
+							title:'Weekly Backup',
+							value: weeklyBackup.msg,
+						});
+					}
+					catch(e) { 
+						errs.push({
+							title: 'Weekly Backup',
+							value: e,
+						});
+					}
+
+					try { 
+						const weeklyDelete = await backup.deleteBackups('weekly', cron.weekly);
+						res.push({
+							title:'Weekly Delete',
+							value: weeklyDelete.msg,
+						});
+					}
+					catch(e) { 
+						errs.push({
+							title: 'Weekly Delete',
+							value: e.message,
+						});
+					}
+				}
+				if (errs.length === 0) { logger.console('CRON job done') }
+				else { logger.error('CRON job failed\n', errs.map(e => e.value).join('\n')) }
+
+				sendSlack(res, `Cron job report for ${waleHost}`, errs);
+				break;
 			default:
 				console.log(usage);
 				break;

@@ -4,32 +4,26 @@ const logger = require('./logging');
 
 const slack = new Webhook(config.webhook);
 
-function sendSlack(msg, title, pretext, err) {
-	const uMsg = msg.charAt(0).toUpperCase() + msg.slice(1);
+function sendSlack(msgs, title, errs) {
 	const payload = {
 		username: 'Postgres-Backup-Status',
 		icon_emoji: ':bar_chart:',
 		channel: config.channel,
 		attachments: [
 			{
-				pretext,
+				pretext: title,
 				color: 'good',
-				fallback: title + '\n' + uMsg,
-				fields: [
-					{
-						title,
-						value: uMsg,
-						short: false,
-					},
-				],
+				fallback: 'Pstgres Backup Status:\n',
+				fields: msgs,
 			},
 		],
 	};
-	if (err) {
-		payload.attachments[0].color = 'danger';
-		payload.attachments[0].fields.push({
-			title: 'Error:',
-			value: err,
+	if (errs.length !== 0) {
+		payload.attachments.push({
+			pretext: 'Failures: ',
+			color: 'danger',
+			fallback: 'Postgres Backup Errors:\n',
+			fields: errs,
 		});
 	}
 	slack.send(payload, (error, header, statusCode) => {
