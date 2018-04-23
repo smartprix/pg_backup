@@ -205,21 +205,29 @@ async function doCommand(com) {
 				catch(e) { 
 					errs.push({
 						title: 'Daily Backup',
-						value: e,
+						value: JSON.stringify(e, Object.getOwnPropertyNames(e), 2),
 					});
 				}
 
 				try {
-					const dailyDelete = await backup.deleteBackups('daily', cron.daily);
-					res.push({
-						title:'Daily Delete',
-						value: dailyDelete.msg,
-					});
+					if (errs.length === 0) {
+						const dailyDelete = await backup.deleteBackups('daily', cron.daily);
+						res.push({
+							title:'Daily Delete',
+							value: dailyDelete.msg,
+						});
+					}
+					else {
+						errs.push({
+							title: 'Daily Delete',
+							value: 'Daily backup failed so not doing Daily Delete',
+						});
+					}
 				}
 				catch(e) { 
 					errs.push({
 						title: 'Daily Delete',
-						value: e,
+						value: JSON.stringify(e, Object.getOwnPropertyNames(e), 2),
 					});
 				}
 
@@ -232,24 +240,32 @@ async function doCommand(com) {
 							value: weeklyBackup.msg,
 						});
 					}
-					catch(e) { 
+					catch(e) {
 						errs.push({
 							title: 'Weekly Backup',
-							value: e,
+							value: JSON.stringify(e, Object.getOwnPropertyNames(e), 2),
 						});
 					}
 
-					try { 
-						const weeklyDelete = await backup.deleteBackups('weekly', cron.weekly);
-						res.push({
-							title:'Weekly Delete',
-							value: weeklyDelete.msg,
-						});
+					try {
+						if (errs.filter(err => err.title === 'Weekly Backup').length === 0) {
+							const weeklyDelete = await backup.deleteBackups('weekly', cron.weekly);
+							res.push({
+								title:'Weekly Delete',
+								value: weeklyDelete.msg,
+							});
+						}
+						else {
+							errs.push({
+								title: 'Weekly Delete',
+								value: 'Weekly backup failed so not doing Weekly Delete',
+							});
+						}
 					}
 					catch(e) { 
 						errs.push({
 							title: 'Weekly Delete',
-							value: e.message,
+							value: JSON.stringify(e, Object.getOwnPropertyNames(e), 2),
 						});
 					}
 				}
