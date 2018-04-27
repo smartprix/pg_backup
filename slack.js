@@ -7,7 +7,7 @@ const slack = new Webhook(config.webhook);
 function sendSlack(msgs, title, errs) {
 	const payload = {
 		username: 'Postgres-Backup-Status',
-		icon_emoji: ':bar_chart:',
+		icon_emoji: ':floppy_disk:',
 		channel: config.channel,
 		attachments: [
 			{
