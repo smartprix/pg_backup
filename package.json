@@ -8,15 +8,15 @@
 		"@slack/client": "^4.2.0",
 		"command-line-args": "^4.0.7",
 		"command-line-commands": "^2.0.1",
-		"command-line-usage": "^4.0.1",
-		"config": "^1.26.2",
-		"moment": "^2.18.1",
-		"tracer": "^0.8.11",
+		"command-line-usage": "^4.1.0",
+		"config": "^1.30.0",
+		"moment": "^2.22.1",
+		"tracer": "^0.8.15",
 		"userid": "^0.3.1"
 	},
 	"devDependencies": {
-		"eslint": "^4.8.0",
-		"eslint-config-smartprix": "^3.2.7"
+		"eslint": "^4.19.1",
+		"eslint-config-smartprix": "^3.4.2"
 	},
 	"eslintConfig": {
 		"extends": "smartprix",
