@@ -1,13 +1,13 @@
 const config = require('config');
-const userid = require('userid');
 const moment = require('moment');
 const logger = require('./logging');
 const spawn = require('child_process').spawn;
 const promisify = require('util').promisify;
 const exec = promisify(require('child_process').exec);
+const execSync = require('child_process').execSync;
 
 const wale = config.get('wale');
-const postgresUID = userid.uid('postgres');
+const postgresUID = Number.parseInt(execSync('id -u postgres').toString().trim(), 10);
 const options = {
 	env: {
 		GOOGLE_APPLICATION_CREDENTIALS: wale.gsAppCreds,

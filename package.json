@@ -11,8 +11,7 @@
 		"command-line-usage": "^4.1.0",
 		"config": "^1.30.0",
 		"moment": "^2.22.1",
-		"tracer": "^0.8.15",
-		"userid": "^0.3.1"
+		"tracer": "^0.8.15"
 	},
 	"devDependencies": {
 		"eslint": "^4.19.1",
