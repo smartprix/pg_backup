@@ -272,7 +272,7 @@ async function doCommand(com) {
 				if (errs.length === 0) { logger.console('CRON job done') }
 				else { logger.error('CRON job failed\n', errs.map(e => e.value).join('\n')) }
 
-				sendSlack(res, `Cron job report for ${waleHost}`, errs);
+				sendSlack(res, `Cron job report for *${waleHost}*`, errs);
 				break;
 			default:
 				console.log(usage);
