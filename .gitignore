@@ -1,0 +1,40 @@
+# Optional npm cache directory
+.npm
+
+# Compiled files (from babel and webpack)
+dist
+
+# OS X
+.DS_Store*
+Icon?
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+.directory
+*~
+
+# WebStorm
+.idea
+*.iml
+
+# VS Code
+.vscode/*
+!.vscode/launch.json
+
+# Environment Files
+env.*
+
+# garbage
+garbage
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules
