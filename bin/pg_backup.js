@@ -225,7 +225,7 @@ async function cronTask() {
 	if (errs.length === 0) { logger.console('CRON job done') }
 	else { logger.error('CRON job failed\n', errs.map(e => e.value).join('\n')) }
 
-	slack(res, `Cron job report for *${waleHost}*`, errs);
+	await slack(`Cron job report for *${waleHost}*`, res, errs);
 }
 
 async function doCommand(com) {
