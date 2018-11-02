@@ -1,14 +1,15 @@
+#! /usr/bin/env node
 const moment = require('moment');
 const config = require('config');
 const commandLineCommands = require('command-line-commands');
 const commandLineArgs = require('command-line-args');
 const getUsage = require('command-line-usage');
 
-const logger = require('./logging');
-const backup = require('./wal-e_backup');
-const restore = require('./wal-e_restore');
-const sendSlack = require('./slack');
-const gcs = require('./gcs');
+const logger = require('../logging');
+const backup = require('../wal-e_backup');
+const restore = require('../wal-e_restore');
+const sendSlack = require('../slack');
+const gcs = require('../gcs');
 
 const cron = config.get('pg').cron;
 const waleHost = config.get('wale').host;
@@ -280,7 +281,7 @@ async function doCommand(com) {
 				await cronTask();
 				break;
 			default:
-				console.log(usage);
+				logger.console(usage);
 				break;
 		}
 	}

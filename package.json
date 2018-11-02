@@ -3,6 +3,9 @@
 	"version": "0.1.0",
 	"description": "Script to run wal-e backups and monitor the results",
 	"main": "index.js",
+	"bin": {
+		"pg_backup": "bin/pg_backup.js"
+	},
 	"author": "Rohit Gohri <rohit.gohri@smartprix.com> (https://github.com/rohit-smpx)",
 	"dependencies": {
 		"@slack/client": "^4.2.0",
