@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 const moment = require('moment');
-const config = require('config');
+const {cfg} = require('sm-utils');
 const commandLineCommands = require('command-line-commands');
 const commandLineArgs = require('command-line-args');
 const getUsage = require('command-line-usage');
@@ -11,8 +11,8 @@ const restore = require('../wal-e_restore');
 const sendSlack = require('../slack');
 const gcs = require('../gcs');
 
-const cron = config.get('pg').cron;
-const waleHost = config.get('wale').host;
+const cron = cfg('pg').cron;
+const waleHost = cfg('wale').host;
 const dateFormat = ['YYYY-MM-DD', 'YYYY-MM-DD_HH', 'YYYY-MM-DD_HH-mm', 'YYYY-MM-DD_HH-mm-ss'];
 
 const validCommands = [null, 'help', '-h', 'list', 'backup', 'restore', 'restore-date', 'delete', 'cron', 'size', 'copy'];

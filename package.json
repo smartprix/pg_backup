@@ -9,12 +9,12 @@
 	"author": "Rohit Gohri <rohit.gohri@smartprix.com> (https://github.com/rohit-smpx)",
 	"dependencies": {
 		"@slack/client": "^4.2.0",
+		"@smpx/oak": "^1.1.1",
 		"command-line-args": "^4.0.7",
 		"command-line-commands": "^2.0.1",
 		"command-line-usage": "^4.1.0",
-		"config": "^1.30.0",
 		"moment": "^2.22.1",
-		"tracer": "^0.8.15"
+		"sm-utils": "^2.15.3"
 	},
 	"devDependencies": {
 		"eslint": "^4.19.1",

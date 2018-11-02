@@ -1,12 +1,13 @@
-const config = require('config');
+const {cfg} = require('sm-utils');
 const moment = require('moment');
 const fsn = require('fs');
 const promisify = require('util').promisify;
-const spawn = require('child_process').spawn;
-const exec = promisify(require('child_process').exec);
+const {spawn, exec: origExec} = require('child_process');
+
 const logger = require('./logging');
 const {options, getBackups, getGsPrefix, customSpawn} = require('./wal-e_backup');
 
+const exec = promisify(origExec);
 const fs = {
 	stat: promisify(fsn.stat),
 	rename: promisify(fsn.rename),
@@ -16,7 +17,7 @@ const fs = {
 	readdir: promisify(fsn.readdir),
 };
 
-const wale = config.get('wale');
+const wale = cfg('wale');
 const NOT_EXISTS = -2;
 
 async function checkPGDATA(force) {

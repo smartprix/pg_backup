@@ -1,11 +1,11 @@
-const config = require('config');
+const {cfg} = require('sm-utils');
 const moment = require('moment');
 const promisify = require('util').promisify;
 const exec = promisify(require('child_process').exec);
 const logger = require('./logging');
 const {getBackups} = require('./wal-e_backup');
 
-const wale = config.get('wale');
+const wale = cfg('wale');
 const gsutil = '/usr/local/bin/gsutil';
 
 async function getSize(host = wale.host) {

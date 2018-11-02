@@ -1,19 +1,19 @@
 const Webhook = require('@slack/client').IncomingWebhook;
-const config = require('config').get('pg').slack;
+const {cfg} = require('sm-utils');
 const logger = require('./logging');
 
-const slack = new Webhook(config.webhook);
+const slack = new Webhook(cfg('pg.slack.webhook'));
 
 function sendSlack(msgs, title, errs) {
 	const payload = {
 		username: 'Postgres-Backup-Status',
 		icon_emoji: ':floppy_disk:',
-		channel: config.channel,
+		channel: cfg('pg.slack.channel'),
 		attachments: [
 			{
 				pretext: title,
 				color: 'good',
-				fallback: 'Pstgres Backup Status:\n',
+				fallback: 'Postgres Backup Status:\n',
 				fields: msgs,
 			},
 		],

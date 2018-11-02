@@ -1,13 +1,13 @@
-const config = require('config');
+const {cfg} = require('sm-utils');
 const moment = require('moment');
-const logger = require('./logging');
-const spawn = require('child_process').spawn;
+const {spawn, execSync, exec: origExec} = require('child_process');
 const promisify = require('util').promisify;
-const exec = promisify(require('child_process').exec);
-const execSync = require('child_process').execSync;
+const logger = require('./logging');
 
-const wale = config.get('wale');
+const exec = promisify(origExec);
 const postgresUID = Number.parseInt(execSync('id -u postgres').toString().trim(), 10);
+
+const wale = cfg('wale');
 const options = {
 	env: {
 		GOOGLE_APPLICATION_CREDENTIALS: wale.gsAppCreds,
@@ -111,7 +111,7 @@ async function waleDelete(branch, olderThan, total) {
 		if (olderThan === 0) {
 			subComm = ['everything'];
 		}
-		await customSpawn(wale.path, [ '--gs-prefix', getGsPrefix(branch, wale.host), 'delete', '--confirm', ...subComm], options);
+		await customSpawn(wale.path, ['--gs-prefix', getGsPrefix(branch, wale.host), 'delete', '--confirm', ...subComm], options);
 		return {msg: `Deletion: Deleted the oldest ${total - olderThan} backups, retained ${olderThan} for host ${wale.host}, branch ${branch}`};
 	}
 	catch (err) {
