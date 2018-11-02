@@ -5,11 +5,13 @@ const commandLineCommands = require('command-line-commands');
 const commandLineArgs = require('command-line-args');
 const getUsage = require('command-line-usage');
 
-const logger = require('../logging');
-const backup = require('../wal-e_backup');
-const restore = require('../wal-e_restore');
-const sendSlack = require('../slack');
-const gcs = require('../gcs');
+const {
+	backup,
+	restore,
+	gcs,
+	slack,
+	logger,
+} = require('../index');
 
 const cron = cfg('pg').cron;
 const waleHost = cfg('wale').host;
@@ -223,7 +225,7 @@ async function cronTask() {
 	if (errs.length === 0) { logger.console('CRON job done') }
 	else { logger.error('CRON job failed\n', errs.map(e => e.value).join('\n')) }
 
-	sendSlack(res, `Cron job report for *${waleHost}*`, errs);
+	slack(res, `Cron job report for *${waleHost}*`, errs);
 }
 
 async function doCommand(com) {

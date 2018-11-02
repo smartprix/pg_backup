@@ -20,5 +20,6 @@ module.exports = {
 		gsAppCreds: '/var/lib/postgres_backup/config/gsAppCreds.json',
 		pgdata: '/var/lib/postgresql/10/main',
 	},
+	pgsqlLogs: '',
 };
 
