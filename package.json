@@ -1,9 +1,9 @@
 {
-	"name": "wal-e_backup_script",
-	"version": "0.2.0",
+	"name": "@smpx/pg_backup",
+	"version": "0.1.0",
 	"description": "Script to run wal-e backups and monitor the results",
-	"main": "wal-e_backup.js",
-	"author": "Rohit Gohri <rohit.gohri@smartprix.com> (http://www.smartprix.com/)",
+	"main": "index.js",
+	"author": "Rohit Gohri <rohit.gohri@smartprix.com> (https://github.com/rohit-smpx)",
 	"dependencies": {
 		"@slack/client": "^4.2.0",
 		"command-line-args": "^4.0.7",
@@ -19,6 +19,8 @@
 	},
 	"eslintConfig": {
 		"extends": "smartprix",
-		"rules": {}
+		"rules": {
+			"vue/script-indent": 0
+		}
 	}
 }

@@ -3,6 +3,7 @@ const config = require('config');
 const commandLineCommands = require('command-line-commands');
 const commandLineArgs = require('command-line-args');
 const getUsage = require('command-line-usage');
+
 const logger = require('./logging');
 const backup = require('./wal-e_backup');
 const restore = require('./wal-e_restore');
@@ -141,6 +142,89 @@ let options = commandLineArgs(optionDefinitions, {argv});
 logger.enableConsole(options._all.log);
 let res;
 
+async function cronTask() {
+	const errs = [];
+	res = [];
+	try {
+		const dailyBackup = await backup.doBackup('daily');
+		res.push({
+			title: 'Daily Backup',
+			value: dailyBackup.msg,
+		});
+	}
+	catch (e) {
+		errs.push({
+			title: 'Daily Backup',
+			value: JSON.stringify(e, Object.getOwnPropertyNames(e), 2),
+		});
+	}
+
+	try {
+		if (errs.length === 0) {
+			const dailyDelete = await backup.deleteBackups('daily', cron.daily);
+			res.push({
+				title: 'Daily Delete',
+				value: dailyDelete.msg,
+			});
+		}
+		else {
+			errs.push({
+				title: 'Daily Delete',
+				value: 'Daily backup failed so not doing Daily Delete',
+			});
+		}
+	}
+	catch (e) {
+		errs.push({
+			title: 'Daily Delete',
+			value: JSON.stringify(e, Object.getOwnPropertyNames(e), 2),
+		});
+	}
+
+	if (moment().day() === cron.weekday) {
+		logger.log('Weekly stuff running too');
+		try {
+			const weeklyBackup = await gcs.copyBackup(cron.weekday - 1);
+			res.push({
+				title: 'Weekly Backup',
+				value: weeklyBackup.msg,
+			});
+		}
+		catch (e) {
+			errs.push({
+				title: 'Weekly Backup',
+				value: JSON.stringify(e, Object.getOwnPropertyNames(e), 2),
+			});
+		}
+
+		try {
+			if (errs.filter(err => err.title === 'Weekly Backup').length === 0) {
+				const weeklyDelete = await backup.deleteBackups('weekly', cron.weekly);
+				res.push({
+					title: 'Weekly Delete',
+					value: weeklyDelete.msg,
+				});
+			}
+			else {
+				errs.push({
+					title: 'Weekly Delete',
+					value: 'Weekly backup failed so not doing Weekly Delete',
+				});
+			}
+		}
+		catch (e) {
+			errs.push({
+				title: 'Weekly Delete',
+				value: JSON.stringify(e, Object.getOwnPropertyNames(e), 2),
+			});
+		}
+	}
+	if (errs.length === 0) { logger.console('CRON job done') }
+	else { logger.error('CRON job failed\n', errs.map(e => e.value).join('\n')) }
+
+	sendSlack(res, `Cron job report for *${waleHost}*`, errs);
+}
+
 async function doCommand(com) {
 	try {
 		switch (com) {
@@ -193,86 +277,7 @@ async function doCommand(com) {
 				break;
 
 			case 'cron':
-				let errs = [];
-				res = [];
-				try { 
-					const dailyBackup = await backup.doBackup('daily');
-					res.push({
-						title:'Daily Backup',
-						value: dailyBackup.msg,
-					});
-				}
-				catch(e) { 
-					errs.push({
-						title: 'Daily Backup',
-						value: JSON.stringify(e, Object.getOwnPropertyNames(e), 2),
-					});
-				}
-
-				try {
-					if (errs.length === 0) {
-						const dailyDelete = await backup.deleteBackups('daily', cron.daily);
-						res.push({
-							title:'Daily Delete',
-							value: dailyDelete.msg,
-						});
-					}
-					else {
-						errs.push({
-							title: 'Daily Delete',
-							value: 'Daily backup failed so not doing Daily Delete',
-						});
-					}
-				}
-				catch(e) { 
-					errs.push({
-						title: 'Daily Delete',
-						value: JSON.stringify(e, Object.getOwnPropertyNames(e), 2),
-					});
-				}
-
-				if (moment().day() === cron.weekday) {
-					logger.log('Weekly stuff running too');
-					try { 
-						const weeklyBackup = await gcs.copyBackup(cron.weekday - 1);
-						res.push({
-							title:'Weekly Backup',
-							value: weeklyBackup.msg,
-						});
-					}
-					catch(e) {
-						errs.push({
-							title: 'Weekly Backup',
-							value: JSON.stringify(e, Object.getOwnPropertyNames(e), 2),
-						});
-					}
-
-					try {
-						if (errs.filter(err => err.title === 'Weekly Backup').length === 0) {
-							const weeklyDelete = await backup.deleteBackups('weekly', cron.weekly);
-							res.push({
-								title:'Weekly Delete',
-								value: weeklyDelete.msg,
-							});
-						}
-						else {
-							errs.push({
-								title: 'Weekly Delete',
-								value: 'Weekly backup failed so not doing Weekly Delete',
-							});
-						}
-					}
-					catch(e) { 
-						errs.push({
-							title: 'Weekly Delete',
-							value: JSON.stringify(e, Object.getOwnPropertyNames(e), 2),
-						});
-					}
-				}
-				if (errs.length === 0) { logger.console('CRON job done') }
-				else { logger.error('CRON job failed\n', errs.map(e => e.value).join('\n')) }
-
-				sendSlack(res, `Cron job report for *${waleHost}*`, errs);
+				await cronTask();
 				break;
 			default:
 				console.log(usage);
