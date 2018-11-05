@@ -2,7 +2,7 @@ const os = require('os');
 
 module.exports = {
 	pg: {
-		logDir: '/smartprix/logs/server_logs/postgres_backup',
+		logDir: '/smartprix/logs/server_logs/pg_backup',
 		slack: {
 			channel: '@dev-events',
 			webhook: 'https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX',
