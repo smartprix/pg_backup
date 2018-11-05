@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 const moment = require('moment');
-const {cfg} = require('sm-utils');
+const {cfg, file} = require('sm-utils');
 const commandLineCommands = require('command-line-commands');
 const commandLineArgs = require('command-line-args');
 const getUsage = require('command-line-usage');
@@ -16,6 +16,12 @@ const {
 const cron = cfg('pg').cron;
 const waleHost = cfg('wale').host;
 const dateFormat = ['YYYY-MM-DD', 'YYYY-MM-DD_HH', 'YYYY-MM-DD_HH-mm', 'YYYY-MM-DD_HH-mm-ss'];
+
+const confFile = process.env.PGBACKUP_CONFIG;
+
+if (confFile) {
+	cfg.file(confFile, {ignoreNotFound: true});
+}
 
 const validCommands = [null, 'help', '-h', 'list', 'backup', 'restore', 'restore-date', 'delete', 'cron', 'size', 'copy'];
 const {command, argv} = commandLineCommands(validCommands);

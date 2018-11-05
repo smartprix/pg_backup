@@ -16,7 +16,7 @@ Create a project and a [storage bucket](https://console.cloud.google.com/storage
 
 Make a [service account](https://console.cloud.google.com/iam-admin/serviceaccounts/) with permission to modify the Storage bucket you created and export it's credentials as a json.
 
-### default.json
+### config.json
 
 In the config folder
 
