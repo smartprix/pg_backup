@@ -1,6 +1,6 @@
 {
 	"name": "@smpx/pg_backup",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Script to run wal-e backups, copy them for weekly archival, and monitor the results",
 	"main": "index.js",
 	"scripts": {
@@ -42,23 +42,23 @@
 	},
 	"babel": {
 		"presets": [
-		  [
-			"@babel/preset-env",
-			{
-			  "targets": {
-				"node": "current"
-			  },
-			  "modules": "commonjs",
-			  "shippedProposals": true
-			}
-		  ]
+			[
+				"@babel/preset-env",
+				{
+					"targets": {
+						"node": "current"
+					},
+					"modules": "commonjs",
+					"shippedProposals": true
+				}
+			]
 		],
 		"sourceMaps": "inline",
 		"retainLines": true,
 		"plugins": [
-		  "@babel/plugin-proposal-class-properties",
-		  "@babel/plugin-transform-modules-commonjs",
-		  "@babel/plugin-proposal-object-rest-spread"
+			"@babel/plugin-proposal-class-properties",
+			"@babel/plugin-transform-modules-commonjs",
+			"@babel/plugin-proposal-object-rest-spread"
 		]
 	}
 }
