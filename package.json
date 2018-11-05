@@ -10,6 +10,15 @@
 		"pg_backup": "bin/pg_backup.js"
 	},
 	"author": "Rohit Gohri <rohit.gohri@smartprix.com> (https://github.com/rohit-smpx)",
+	"keywords": [
+		"postgres",
+		"backup",
+		"wal-e",
+		"continuous",
+		"retention-levels",
+		"weekly",
+		"cli"
+	],
 	"dependencies": {
 		"@slack/client": "^4.2.0",
 		"@smpx/oak": "^1.1.1",
