@@ -1,6 +1,6 @@
 # Postgres Backup Utility
 
-A node utility called through a bash script ('./postgres_backup.sh') to manage PstgreSQL backups on Google Cloud Storage.
+A node utility to manage PstgreSQL backups on Google Cloud Storage.
 It uses wal-e (http://github.com/wal-e/wal-e) to peform restores, backups, and cleanups.
 
 It is meant to be used with 2 backup branches: 'daily' & 'weekly' and **run as root**.
@@ -16,7 +16,7 @@ Create a project and a [storage bucket](https://console.cloud.google.com/storage
 
 Make a [service account](https://console.cloud.google.com/iam-admin/serviceaccounts/) with permission to modify the Storage bucket you created and export it's credentials as a json.
 
-### default.json
+### config.json
 
 In the config folder
 
@@ -110,21 +110,21 @@ The optional arguments cannot have spaces in them.
 
 ### Get Backups
 
-	postgres_backup list [--branch BRANCH --host HOST]
+	pg_backup list [--branch BRANCH --host HOST]
 
 Get list of backups in the specified branch and for the specified host.
 
 eg.:
 
-	postgres_backup list --branch weekly --host smpx-170l
+	pg_backup list --branch weekly --host smpx-170l
 
 or
 
-	postgres_backup list
+	pg_backup list
 
 which will default to:
 
-	postgres_backup list --branch daily --host SELF
+	pg_backup list --branch daily --host SELF
 	Output: 2017-10-04T15:35:56+0530 <log> 
 	base_0000000B000000070000000C_00000040		Fri Sep 29 2017 10:24:01 GMT+0530
 	base_0000000B000000080000000F_00000040		Fri Sep 29 2017 14:43:05 GMT+0530
@@ -139,60 +139,60 @@ where SELF is the hostname of the system the script is running on.
 
 ### Do a Backup
 
-	postgres_backup backup
+	pg_backup backup
 
 Make a base backup and upload to the daily branch. If you want to do a backup to any other branch, do this first then use the weekly option.
 
 eg.
 
-	postgres_backup backup
+	pg_backup backup
 	Output: 2017-10-04T17:33:48+0530 <log> daily Backup: Succesfully done on Wed Oct 04 2017 17:33:48 GMT+0530 for host rohit-hp. Backup : base_0000001300000008000000A0_00000040
 
 
 ### Delete backups while retaining N
 
-	postgres_backup delete [--branch BRANCH --retain N]
+	pg_backup delete [--branch BRANCH --retain N]
 
 Deletes older backups while retaining the latest N backups
 
 eg.
 
-	postgres_backup delete --retain 7
+	pg_backup delete --retain 7
 	Output:2017-10-04T15:37:53+0530 <log> daily Deletion: Retained the latest 7 backups for host rohit-hp
 
 
 ### Restore from Base Backup
 
-	postgres_backup restore [--branch BRANCH --base BACKUP_NAME --date DATE --force BOOL --host HOST]
+	pg_backup restore [--branch BRANCH --base BACKUP_NAME --date DATE --force BOOL --host HOST]
 
 Restore from the specified base backup (also accepts LATEST param) in the specified branch of the specified host (useful to clone other hosts from their backups). If a date is specified, it will set that as the recovery_target in 'recovery.conf' of Postgres while restoring. If a directory already exists at PGDATA it will fail by default, use 'force' option to change behaviour.
 
 ### Restore from date
 
-	postgres_backup -R [--date DATE --host HOST]
+	pg_backup -R [--date DATE --host HOST]
 
 Restore from a date. It will try to find the latest base backup before or on the specified date, first in the 'daily' branch then the 'weekly' branch. After that will restore from that upto to the specified date. Will rename any existing directory at PGDATA.
 
 eg.
 
-	postgres_backup -R
+	pg_backup -R
 
 which will default to
 
-	postgres_backup -R --date NOW --host SELF
+	pg_backup -R --date NOW --host SELF
 	Output: Wal-e restore succesfully done on Wed Oct 04 2017 16:31:52 GMT+0530 on host rohit-hp from base backup base_0000000B000000080000005F_00000040 of rohit-hp, from branch daily with recovery target recovery_target_time = '2017-10-04T10:57:58.246Z'
 
 where SELF is hostname of system, and 'NOW' will set the date as the current time.
 
 ### Copy Day's backup to Weekly branch
 
-	postgres_backup copy [--day WEEKDAY --branch DEST_BRANCH]
+	pg_backup copy [--day WEEKDAY --branch DEST_BRANCH]
 
 Find the latest backup on the specified day of the current week in the 'daily' branch and copy it to the specified branch(default:'weekly') directly in the cloud using gsutil.
 
 eg.
 
-	postgres_backup copy --day -2
+	pg_backup copy --day -2
 	Output: Weekly Backup: Copied daily backup base_0000000B000000080000005F_00000040 and corresponding wal files to weekly, no. of files : 5
 	[ 'gs://backup-postgres//rohit-hp/weekly/wal_005/0000000B000000080000005F.lzo',
 	  'gs://backup-postgres//rohit-hp/weekly/wal_005/0000000B0000000800000060.lzo',
@@ -203,18 +203,18 @@ eg.
 
 ### Get Size
 
-	postgres_backup size [--host HOST]
+	pg_backup size [--host HOST]
 
 Get the size of backups of the current host or the specified one.
 
 eg.
 
-	postgres_backup size
+	pg_backup size
 	Output: 2017-10-04T14:39:59+0530 <log> TOTAL: 1136 objects, 511297075 bytes (487.61 MiB)
 
 ### Do CRON Task
 
-	postgres_backup cron
+	pg_backup cron
 
 This will do a daily backup and deletion. Will check for the day of the week, if it is 'Saturday'(default, can be changed by changing var in group_vars), then do a weekly backup(copy the last day's daily backup to weekly branch) and deletion too. On completion(success/failure), will send a slack message to the specified channel(default:'@dev-events') in settings. 
 
@@ -235,15 +235,15 @@ eg.
 
 ### --log, -l
 
-	postgres_backup <command> -l 
+	pg_backup <command> -l 
 
 No parameters. Logging by default is done in a file in the /var/log/postgres_backup directory and console logging is off.
 Console logging can be enabled by using this option. (default: false)
 
 eg.
 
-	postgres_backup size -l
-	postgres_backup list -l --branch weekly
+	pg_backup size -l
+	pg_backup list -l --branch weekly
 
 ### --branch, -b
 Specify branch : 'daily' or 'weekly' (default: daily)
