@@ -18,7 +18,7 @@ Make a [service account](https://console.cloud.google.com/iam-admin/serviceaccou
 
 ### config.json
 
-In the config folder
+Save the config somewhere accessible by the app and set the path in the PGBACKUP_CONFIG environment variable.
 
 The structure of the file should be :
 
