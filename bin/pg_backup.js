@@ -93,14 +93,14 @@ const sections = [
 	},
 	{
 		header: 'Synopsis',
-		content: '$ postgres_backup <command> <options>',
+		content: '$ pg_backup <command> <options>',
 	},
 	{
 		header: 'Command List',
 		content: [
 			{
 				name: 'help',
-				summary: 'Display help information about postgres_backup.',
+				summary: 'Display help information about pg_backup.',
 			},
 			{
 				name: 'backup',
