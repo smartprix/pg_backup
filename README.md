@@ -18,15 +18,13 @@ Make a [service account](https://console.cloud.google.com/iam-admin/serviceaccou
 
 ### config.json
 
-Save the config somewhere accessible by the app and set the path in the PGBACKUP_CONFIG environment variable.
+Save the config somewhere accessible by the app and set the path in the `PGBACKUP_CONFIG` environment variable.
 
 The structure of the file should be :
 
 	{	
 		"pg": {
-			"scriptParDir": '/var/lib',
-			"scriptDir": '/var/lib/postgres_backup',
-			"logDir": "/smartprix/logs/server_logs/postgres_backup/",
+			"logDir": "/smartprix/logs/postgres_backup/",
 			"slack": {
 				"channel": '@dev-events',
 				"webhook": 'https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX'
