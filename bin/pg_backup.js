@@ -1,9 +1,16 @@
 #! /usr/bin/env node
 const moment = require('moment');
-const {cfg, file} = require('sm-utils');
+const {cfg} = require('sm-utils');
 const commandLineCommands = require('command-line-commands');
 const commandLineArgs = require('command-line-args');
 const getUsage = require('command-line-usage');
+
+const confFile = process.env.PGBACKUP_CONFIG;
+
+cfg.file(`${__dirname}/../config.js`, {overwrite: true});
+if (confFile) {
+	cfg.file(confFile, {ignoreNotFound: true});
+}
 
 const {
 	backup,
@@ -16,12 +23,6 @@ const {
 const cron = cfg('pg').cron;
 const waleHost = cfg('wale').host;
 const dateFormat = ['YYYY-MM-DD', 'YYYY-MM-DD_HH', 'YYYY-MM-DD_HH-mm', 'YYYY-MM-DD_HH-mm-ss'];
-
-const confFile = process.env.PGBACKUP_CONFIG;
-
-if (confFile) {
-	cfg.file(confFile, {ignoreNotFound: true});
-}
 
 const validCommands = [null, 'help', '-h', 'list', 'backup', 'restore', 'restore-date', 'delete', 'cron', 'size', 'copy'];
 const {command, argv} = commandLineCommands(validCommands);
@@ -148,7 +149,9 @@ const sections = [
 ];
 const usage = getUsage(sections);
 let options = commandLineArgs(optionDefinitions, {argv});
-logger.enableConsole(options._all.log);
+if (options._all.log) {
+	logger.enableConsole(options._all.log);
+}
 let res;
 
 async function cronTask() {

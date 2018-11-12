@@ -26,7 +26,7 @@
 		"command-line-commands": "^2.0.1",
 		"command-line-usage": "^4.1.0",
 		"moment": "^2.22.1",
-		"sm-utils": "^2.15.3"
+		"sm-utils": "^2.15.4"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.0.0",
