@@ -250,8 +250,13 @@ async function doCommand(com) {
 
 			case 'list':
 				options = options.list;
-				res = await backup.getBackups(options.branch, options.host, options.detail);
-				logger.console(res.msg, options.detail ? res.data.join('\n') : res.pretty);
+				if (options.detail) { res = await backup.getBackupsDetailed(options.branch, options.host) }
+				else res = await backup.getBackups(options.branch, options.host);
+
+				logger.console(`${res.msg}${options.detail ?
+					res.data.map(arr => arr.join('\t\t')).join('\n') :
+					res.pretty
+				}`);
 				break;
 
 			case 'backup':
