@@ -7,9 +7,12 @@ const getUsage = require('command-line-usage');
 
 const confFile = process.env.PGBACKUP_CONFIG;
 
+// @ts-ignore
 cfg.file(`${__dirname}/../config.js`, {overwrite: true});
+// @ts-ignore
 cfg.file(`${__dirname}/../private/config.js`, {ignoreNotFound: true});
 if (confFile) {
+	// @ts-ignore
 	cfg.file(confFile, {ignoreNotFound: true});
 }
 
@@ -162,7 +165,7 @@ async function cronTask() {
 	const errs = [];
 	res = [];
 	try {
-		const dailyBackup = await backup.doBackup('daily');
+		const dailyBackup = await backup.doBackup();
 		res.push({
 			title: 'Daily Backup',
 			value: dailyBackup.msg,
@@ -256,6 +259,7 @@ async function doCommand(com) {
 				else res = await backup.getBackups(options.branch, options.host);
 
 				logger.console(`${res.msg}${options.detail ?
+					// @ts-ignore
 					res.data.map(arr => arr.join('\t')).join('\n') :
 					res.pretty
 				}`);

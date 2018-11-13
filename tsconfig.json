@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"noEmit": true,
+		"checkJs": true,
+		"resolveJsonModule": true,
+		"lib": [
+			"es2017",
+			"esnext.asynciterable"
+		]
+	},
+	"exclude": [
+		"node_modules",
+		"test"
+	]
+}
