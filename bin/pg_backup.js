@@ -8,6 +8,7 @@ const getUsage = require('command-line-usage');
 const confFile = process.env.PGBACKUP_CONFIG;
 
 cfg.file(`${__dirname}/../config.js`, {overwrite: true});
+cfg.file(`${__dirname}/../private/config.js`, {ignoreNotFound: true});
 if (confFile) {
 	cfg.file(confFile, {ignoreNotFound: true});
 }
@@ -151,8 +152,9 @@ const sections = [
 ];
 const usage = getUsage(sections);
 let options = commandLineArgs(optionDefinitions, {argv});
+
 if (options._all.log) {
-	Logger.enableConsole(options._all.log);
+	Logger.enableConsole();
 }
 let res;
 
@@ -254,7 +256,7 @@ async function doCommand(com) {
 				else res = await backup.getBackups(options.branch, options.host);
 
 				logger.console(`${res.msg}${options.detail ?
-					res.data.map(arr => arr.join('\t\t')).join('\n') :
+					res.data.map(arr => arr.join('\t')).join('\n') :
 					res.pretty
 				}`);
 				break;
@@ -299,12 +301,12 @@ async function doCommand(com) {
 				await cronTask();
 				break;
 			default:
-				logger.console(usage);
+				console.log(usage);
 				break;
 		}
 	}
 	catch (err) {
-		logger.error(err);
+		logger.console({level: 'error'}, `Command "${com}" failed`, err);
 	}
 }
 
