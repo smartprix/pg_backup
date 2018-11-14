@@ -7,8 +7,12 @@ const getUsage = require('command-line-usage');
 
 const confFile = process.env.PGBACKUP_CONFIG;
 
+// @ts-ignore
 cfg.file(`${__dirname}/../config.js`, {overwrite: true});
+// @ts-ignore
+cfg.file(`${__dirname}/../private/config.js`, {ignoreNotFound: true});
 if (confFile) {
+	// @ts-ignore
 	cfg.file(confFile, {ignoreNotFound: true});
 }
 
@@ -17,9 +21,11 @@ const {
 	restore,
 	gcs,
 	slack,
-	logger,
+	logger: Logger,
 } = require('../index');
 
+
+const logger = new Logger('cli');
 const cron = cfg('pg').cron;
 const waleHost = cfg('wale').host;
 const dateFormat = ['YYYY-MM-DD', 'YYYY-MM-DD_HH', 'YYYY-MM-DD_HH-mm', 'YYYY-MM-DD_HH-mm-ss'];
@@ -149,8 +155,9 @@ const sections = [
 ];
 const usage = getUsage(sections);
 let options = commandLineArgs(optionDefinitions, {argv});
+
 if (options._all.log) {
-	logger.enableConsole(options._all.log);
+	Logger.enableConsole();
 }
 let res;
 
@@ -158,7 +165,7 @@ async function cronTask() {
 	const errs = [];
 	res = [];
 	try {
-		const dailyBackup = await backup.doBackup('daily');
+		const dailyBackup = await backup.doBackup();
 		res.push({
 			title: 'Daily Backup',
 			value: dailyBackup.msg,
@@ -248,8 +255,14 @@ async function doCommand(com) {
 
 			case 'list':
 				options = options.list;
-				res = await backup.getBackups(options.branch, options.host, options.detail);
-				logger.console(res.msg, options.detail ? res.data.join('\n') : res.pretty);
+				if (options.detail) { res = await backup.getBackupsDetailed(options.branch, options.host) }
+				else res = await backup.getBackups(options.branch, options.host);
+
+				logger.console(`${res.msg}${options.detail ?
+					// @ts-ignore
+					res.data.map(arr => arr.join('\t')).join('\n') :
+					res.pretty
+				}`);
 				break;
 
 			case 'backup':
@@ -292,12 +305,12 @@ async function doCommand(com) {
 				await cronTask();
 				break;
 			default:
-				logger.console(usage);
+				console.log(usage);
 				break;
 		}
 	}
 	catch (err) {
-		logger.error(err);
+		logger.console({level: 'error'}, `Command "${com}" failed`, err);
 	}
 }
 

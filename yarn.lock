@@ -682,10 +682,10 @@
     retry "^0.12.0"
     ws "^5.2.0"
 
-"@smpx/oak@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@smpx/oak/-/oak-1.1.1.tgz#404712e22a70f22cbd1e4eb15d6cf0be7692d27e"
-  integrity sha512-ZejPyN8wwa1g1PzznJNLdSDY7OpyrJkHBDkPIXu+1iFYhUi5KKEjGCDydh2jBqBIs8ELKx0cliDK4gYqp0lR/w==
+"@smpx/oak@^1.2.5":
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/@smpx/oak/-/oak-1.2.5.tgz#50d14fbf6f6db5ba8fff58cc59f30061e3a9dd4a"
+  integrity sha512-ZhbGFamR4/IXPMOHJTye8qWFhf1oNfsX+yX6mHqQfEuAQEbU614PvpODkFW+CqOJDwmtAMfmCiibviDIlr84dQ==
   dependencies:
     "@smpx/tail" "^0.1.0"
     "@types/node" "^10.12.0"
@@ -759,6 +759,11 @@
   version "10.12.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.2.tgz#d77f9faa027cadad9c912cd47f4f8b07b0fb0864"
   integrity sha512-53ElVDSnZeFUUFIYzI8WLQ25IhWzb6vbddNp8UHlXQyU0ET2RhV5zg0NfubzU7iNMh5bBXb0htCzfvrSVNgzaQ==
+
+"@types/node@^10.12.6":
+  version "10.12.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.6.tgz#7fc213c1b811c90fc9a3edb6206742b95d697678"
+  integrity sha512-+ZWB5Ec1iki99xQFzBlivlKxSZQ+fuUKBott8StBOnLN4dWbRHlgdg1XknpW6g0tweniN5DcOqA64CJyOUPSAw==
 
 "@types/p-cancelable@^0.3.0":
   version "0.3.0"

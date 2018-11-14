@@ -21,6 +21,7 @@ module.exports = {
 		gsPrefix: 'gs://postgresql-test1-backups/',
 		gsAppCreds: '/smartprix/conf/gsAppCreds.json',
 		pgdata: '/var/lib/postgresql/10/main',
+		path: '/usr/local/bin/wal-e',
 	},
 	pgsqlLogs: '/smartprix/logs/pgsql',
 };
