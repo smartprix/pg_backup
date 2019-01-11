@@ -42,6 +42,7 @@ const optionDefinitions = [
 	{
 		name: 'log',
 		alias: 'l',
+		default: false,
 		type: Boolean,
 		description: 'Enables console logging when this option is used, by default only file logging is enabled',
 	}, {
@@ -154,16 +155,15 @@ const sections = [
 	},
 ];
 const usage = getUsage(sections);
-let options = commandLineArgs(optionDefinitions, {argv});
+const options = commandLineArgs(optionDefinitions, {argv});
 
 if (options._all.log) {
 	Logger.enableConsole();
 }
-let res;
 
 async function cronTask() {
 	const errs = [];
-	res = [];
+	const res = [];
 	try {
 		const dailyBackup = await backup.doBackup();
 		res.push({
@@ -245,20 +245,24 @@ async function cronTask() {
 }
 
 async function doCommand(com) {
+	let selectedOption;
+	let res;
 	try {
 		switch (com) {
 			case 'size':
-				options = options.size;
-				res = await gcs.getSize(options.host);
+				selectedOption = options.size;
+				res = await gcs.getSize(selectedOption.host);
 				logger.console(res);
 				break;
 
 			case 'list':
-				options = options.list;
-				if (options.detail) { res = await backup.getBackupsDetailed(options.branch, options.host) }
-				else res = await backup.getBackups(options.branch, options.host);
+				selectedOption = options.list;
+				if (selectedOption.detail) {
+					res = await backup.getBackupsDetailed(selectedOption.branch, selectedOption.host);
+				}
+				else res = await backup.getBackups(selectedOption.branch, selectedOption.host);
 
-				logger.console(`${res.msg}${options.detail ?
+				logger.console(`${res.msg}${selectedOption.detail ?
 					// @ts-ignore
 					res.data.map(arr => arr.join('\t')).join('\n') :
 					res.pretty
@@ -271,33 +275,33 @@ async function doCommand(com) {
 				break;
 
 			case 'delete':
-				options = options.delete;
-				res = await backup.deleteBackups(options.branch, options.retain);
+				selectedOption = options.delete;
+				res = await backup.deleteBackups(selectedOption.branch, selectedOption.retain);
 				logger.console(res.msg);
 				break;
 
 			case 'restore':
-				options = options.restore;
-				res = await restore.doRestore(options.branch, options.force,
-					options.host, options.base, options.date);
+				selectedOption = options.restore;
+				res = await restore.doRestore(selectedOption.branch, selectedOption.force,
+					selectedOption.host, selectedOption.base, selectedOption.date);
 				logger.console(res.msg);
 				break;
 
 			case 'copy':
-				options = options.copy;
-				if (options.branch === 'daily') {
-					res = await gcs.copyBackup(options.day);
+				selectedOption = options.copy;
+				if (selectedOption.branch === 'daily') {
+					res = await gcs.copyBackup(selectedOption.day);
 				}
 				else {
-					res = await gcs.copyBackup(options.day, 'daily', options.branch);
+					res = await gcs.copyBackup(selectedOption.day, 'daily', selectedOption.branch);
 				}
 				logger.console(res.msg);
 				logger.debug(res.data);
 				break;
 
 			case 'restore-date':
-				options = options.restoreDate;
-				res = await restore.restoreFromDate(options.date, options.host);
+				selectedOption = options.restoreDate;
+				res = await restore.restoreFromDate(selectedOption.date, selectedOption.host);
 				logger.console(res.msg);
 				break;
 
