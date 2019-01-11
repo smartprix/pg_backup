@@ -24,8 +24,6 @@ const {
 	logger: Logger,
 } = require('../index');
 
-
-const logger = new Logger('cli');
 const cron = cfg('pg').cron;
 const waleHost = cfg('wale').host;
 const dateFormat = ['YYYY-MM-DD', 'YYYY-MM-DD_HH', 'YYYY-MM-DD_HH-mm', 'YYYY-MM-DD_HH-mm-ss'];
@@ -160,6 +158,8 @@ const options = commandLineArgs(optionDefinitions, {argv});
 if (options._all.log) {
 	Logger.enableConsole();
 }
+
+const logger = new Logger('cli');
 
 async function cronTask() {
 	const errs = [];
