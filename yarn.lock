@@ -682,10 +682,10 @@
     retry "^0.12.0"
     ws "^5.2.0"
 
-"@smpx/oak@^1.2.5":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@smpx/oak/-/oak-1.2.5.tgz#50d14fbf6f6db5ba8fff58cc59f30061e3a9dd4a"
-  integrity sha512-ZhbGFamR4/IXPMOHJTye8qWFhf1oNfsX+yX6mHqQfEuAQEbU614PvpODkFW+CqOJDwmtAMfmCiibviDIlr84dQ==
+"@smpx/oak@^1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@smpx/oak/-/oak-1.2.7.tgz#dab464798541b0ef5b60774ded57cb8afdfd32cf"
+  integrity sha512-Qrk2t0tgc7hIhrtFzPXGXZHw7WRfkWh/Z6kjE16HCcCZGyyp3KqYsazRPKZPMTgfGgEfjvecijm0im255s6mfg==
   dependencies:
     "@smpx/tail" "^0.1.0"
     "@types/node" "^10.12.0"
