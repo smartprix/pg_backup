@@ -1,6 +1,6 @@
 {
 	"name": "@smpx/pg_backup",
-	"version": "0.3.4",
+	"version": "0.3.5",
 	"description": "Script to run wal-e backups, copy them for weekly archival, and monitor the results",
 	"main": "index.js",
 	"scripts": {
