@@ -5,6 +5,8 @@ const commandLineCommands = require('command-line-commands');
 const commandLineArgs = require('command-line-args');
 const getUsage = require('command-line-usage');
 
+const {version} = require('../package.json');
+
 const confFile = process.env.PGBACKUP_CONFIG;
 
 // @ts-ignore
@@ -16,6 +18,7 @@ if (confFile) {
 	cfg.file(confFile, {ignoreNotFound: true});
 }
 
+// This is required later so cfg's default vals are not read
 const {
 	backup,
 	restore,
@@ -106,6 +109,10 @@ const sections = [
 	{
 		header: 'Synopsis',
 		content: '$ pg_backup <command> <options>',
+	},
+	{
+		header: 'version',
+		content: `v${version}`,
 	},
 	{
 		header: 'Command List',
