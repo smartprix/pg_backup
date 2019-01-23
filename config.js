@@ -4,7 +4,7 @@ module.exports = {
 	pg: {
 		logDir: '/smartprix/logs/pg_backup',
 		slack: {
-			channel: '@dev-events',
+			channel: 'dev-events',
 			webhook: 'https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX',
 		},
 		gcs: {
@@ -12,7 +12,7 @@ module.exports = {
 		},
 		cron: {
 			daily: 8, // keep how many daily backups
-			weekly: 12, // keep how naby weekly backups
+			weekly: 12, // keep how many weekly backups
 			weekday: 6, // which weekday to copy backup on
 		},
 	},
