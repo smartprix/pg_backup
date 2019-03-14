@@ -18,21 +18,26 @@ if (confFile) {
 	cfg.file(confFile, {ignoreNotFound: true});
 }
 
+const validCommands = [null, 'help', '-h', 'list', 'backup', 'restore', 'restore-date', 'delete', 'cron', 'size', 'copy'];
+const {command, argv} = commandLineCommands(validCommands);
+
+// This is required first so that Logger instances are not initialized in each file
+const Logger = require('../lib/logging');
+
+Logger.setGlobalOptions({command});
+
 // This is required later so cfg's default vals are not read
 const {
 	backup,
 	restore,
 	gcs,
 	slack,
-	logger: Logger,
 } = require('../index');
 
 const cron = cfg('pg').cron;
 const waleHost = cfg('wale').host;
 const dateFormat = ['YYYY-MM-DD', 'YYYY-MM-DD_HH', 'YYYY-MM-DD_HH-mm', 'YYYY-MM-DD_HH-mm-ss'];
 
-const validCommands = [null, 'help', '-h', 'list', 'backup', 'restore', 'restore-date', 'delete', 'cron', 'size', 'copy'];
-const {command, argv} = commandLineCommands(validCommands);
 
 function parseDate(d) {
 	const momentx = moment(d, dateFormat);
@@ -171,6 +176,7 @@ const logger = new Logger('cli');
 async function cronTask() {
 	const errs = [];
 	const res = [];
+	logger.info('Cron task started');
 	try {
 		const dailyBackup = await backup.doBackup();
 		res.push({
